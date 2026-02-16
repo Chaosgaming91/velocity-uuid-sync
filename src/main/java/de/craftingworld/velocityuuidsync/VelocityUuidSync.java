@@ -10,6 +10,7 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
@@ -84,7 +85,12 @@ public class VelocityUuidSync {
     public void onServerPreConnect(ServerPreConnectEvent event) {
         // Check if the player is connecting to an offline-mode server
         // Use getOriginalServer() which is compatible with Velocity 3.4.0
-        String targetServerName = event.getOriginalServer().getServerInfo().getName();
+        RegisteredServer originalServer = event.getOriginalServer();
+        if (originalServer == null) {
+            return; // No server to connect to, skip processing
+        }
+        
+        String targetServerName = originalServer.getServerInfo().getName();
         
         if (configManager.isOfflineModeServer(targetServerName)) {
             String username = event.getPlayer().getUsername();
