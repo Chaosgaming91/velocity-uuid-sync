@@ -17,6 +17,13 @@ public class UuidStorageManager {
     }
 
     public void initialize() throws SQLException {
+        // Explicitly load SQLite JDBC driver for plugin classloader compatibility
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("SQLite JDBC driver not found in classpath", e);
+        }
+        
         Path dbPath = dataDirectory.resolve("uuid-mappings.db");
         String jdbcUrl = "jdbc:sqlite:" + dbPath.toString();
         
