@@ -1,0 +1,58 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+        
+    - name: Build with Maven
+      run: mvn clean package -DskipTests
+      
+    - name: Get version from pom.xml
+      id: get_version
+      run: |
+        VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        
+    - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          target/velocity-uuid-sync-*.jar
+        body: |
+          ## Velocity UUID Sync ${{ steps.get_version.outputs.VERSION }}
+          
+          ### Installation
+          1. Download `velocity-uuid-sync-${{ steps.get_version.outputs.VERSION }}.jar`
+          2. Place in your Velocity `plugins/` folder
+          3. Restart Velocity
+          4. See [INSTALL.md](INSTALL.md) for detailed instructions
+          
+          ### What's New
+          See [README.md](README.md#changelog) for changelog
+          
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: velocity-uuid-sync
+        path: target/velocity-uuid-sync-*.jar
