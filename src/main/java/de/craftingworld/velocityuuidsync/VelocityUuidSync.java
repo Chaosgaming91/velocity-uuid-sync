@@ -87,6 +87,10 @@ public class VelocityUuidSync {
         // Use getOriginalServer() which is compatible with Velocity 3.4.0
         RegisteredServer originalServer = event.getOriginalServer();
         if (originalServer == null) {
+            if (configManager.isDebugEnabled()) {
+                logger.warn("ServerPreConnectEvent fired with null originalServer for player {}", 
+                        event.getPlayer().getUsername());
+            }
             return; // No server to connect to, skip processing
         }
         
