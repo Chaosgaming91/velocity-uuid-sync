@@ -84,15 +84,14 @@ public class VelocityUuidSync {
     @Subscribe
     public void onServerPreConnect(ServerPreConnectEvent event) {
         // Check if the player is connecting to an offline-mode server
-        // Use getOriginalServer() which is compatible with Velocity 3.4.0
-        RegisteredServer originalServer = event.getOriginalServer();
-        if (originalServer == null) {
-            logger.warn("ServerPreConnectEvent fired with null originalServer for player {}", 
-                    event.getPlayer().getUsername());
-            return; // No server to connect to, skip processing
+        // For Velocity 3.4.0 compatibility, we need to handle this carefully
+        RegisteredServer targetServer = event.getOriginalServer();
+        
+        if (targetServer == null) {
+            return; // No target server, nothing to do
         }
         
-        String targetServerName = originalServer.getServerInfo().getName();
+        String targetServerName = targetServer.getServerInfo().getName();
         
         if (configManager.isOfflineModeServer(targetServerName)) {
             String username = event.getPlayer().getUsername();
