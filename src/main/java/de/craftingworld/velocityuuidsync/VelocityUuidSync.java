@@ -4,13 +4,11 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.player.GameProfileRequestEvent;
-import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
-import com.velocitypowered.api.proxy.server.RegisteredServer;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
@@ -78,27 +76,6 @@ public class VelocityUuidSync {
             }
         } catch (Exception e) {
             logger.error("Failed to store UUID mapping for player " + username, e);
-        }
-    }
-
-    @Subscribe
-    public void onServerPreConnect(ServerPreConnectEvent event) {
-        // Check if the player is connecting to an offline-mode server
-        // For Velocity 3.4.0 compatibility, we need to handle this carefully
-        RegisteredServer targetServer = event.getOriginalServer();
-        
-        if (targetServer == null) {
-            return; // No target server, nothing to do
-        }
-        
-        String targetServerName = targetServer.getServerInfo().getName();
-        
-        if (configManager.isOfflineModeServer(targetServerName)) {
-            String username = event.getPlayer().getUsername();
-            if (configManager.isDebugEnabled()) {
-                logger.info("Player {} is connecting to offline-mode server: {}", username, targetServerName);
-                logger.info("Player UUID: {}", event.getPlayer().getUniqueId());
-            }
         }
     }
 
