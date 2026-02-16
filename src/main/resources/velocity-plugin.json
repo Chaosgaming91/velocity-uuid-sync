@@ -1,0 +1,9 @@
+{
+  "id": "velocity-uuid-sync",
+  "name": "Velocity UUID Sync",
+  "version": "${project.version}",
+  "description": "Synchronizes UUIDs between online-mode and offline-mode servers in Velocity",
+  "authors": ["Chaosgaming91"],
+  "main": "de.craftingworld.velocityuuidsync.VelocityUuidSync",
+  "dependencies": []
+}
