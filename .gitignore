@@ -28,6 +28,6 @@ buildNumber.properties
 # Logs
 *.log
 
-# Testing
+# Testing and runtime generated files
 uuid-mappings.db
 config.properties
