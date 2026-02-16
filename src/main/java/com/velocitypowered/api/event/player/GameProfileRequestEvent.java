@@ -1,6 +1,7 @@
 package com.velocitypowered.api.event.player;
 
 import com.velocitypowered.api.util.GameProfile;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class GameProfileRequestEvent {
@@ -10,7 +11,7 @@ public class GameProfileRequestEvent {
     public GameProfileRequestEvent(String username) {
         this.username = username;
         // Initialize with a default offline-mode UUID (Type 3)
-        this.gameProfile = new GameProfile(UUID.nameUUIDFromBytes(("OfflinePlayer:" + username).getBytes()), username);
+        this.gameProfile = new GameProfile(UUID.nameUUIDFromBytes(("OfflinePlayer:" + username).getBytes(StandardCharsets.UTF_8)), username);
     }
 
     public String getUsername() {

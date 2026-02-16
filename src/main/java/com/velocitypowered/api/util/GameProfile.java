@@ -3,7 +3,8 @@ package com.velocitypowered.api.util;
 import java.util.UUID;
 
 /**
- * Mock GameProfile class for testing UUID sync functionality.
+ * Represents a game profile with player information and UUID.
+ * Used for UUID synchronization functionality.
  */
 public class GameProfile {
     private final UUID id;
