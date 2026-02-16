@@ -12,6 +12,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
+import java.util.UUID;
 
 @Plugin(
         id = "velocity-uuid-sync",
@@ -86,11 +87,26 @@ public class VelocityUuidSync {
         
         try {
             String storedUuid = storageManager.getUuid(username);
-            if (storedUuid != null && configManager.isDebugEnabled()) {
-                logger.info("Game profile request for {}: stored UUID is {}", username, storedUuid);
+            
+            if (storedUuid != null) {
+                // Convert string UUID to UUID object
+                UUID uuid = UUID.fromString(storedUuid);
+                
+                // Create a new GameProfile with the stored Mojang UUID
+                com.velocitypowered.api.util.GameProfile newProfile = 
+                    event.getGameProfile().withId(uuid);
+                
+                // Apply the modified profile
+                event.setGameProfile(newProfile);
+                
+                if (configManager.isDebugEnabled()) {
+                    logger.info("Applied stored UUID {} for player {}", storedUuid, username);
+                }
+            } else if (configManager.isDebugEnabled()) {
+                logger.info("No stored UUID found for player {}, using default", username);
             }
         } catch (Exception e) {
-            logger.error("Failed to retrieve UUID for player " + username, e);
+            logger.error("Failed to apply UUID for player " + username, e);
         }
     }
 }
