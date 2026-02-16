@@ -89,24 +89,28 @@ public class VelocityUuidSync {
             String storedUuid = storageManager.getUuid(username);
             
             if (storedUuid != null) {
-                // Convert string UUID to UUID object
-                UUID uuid = UUID.fromString(storedUuid);
-                
-                // Create a new GameProfile with the stored Mojang UUID
-                com.velocitypowered.api.util.GameProfile newProfile = 
-                    event.getGameProfile().withId(uuid);
-                
-                // Apply the modified profile
-                event.setGameProfile(newProfile);
-                
-                if (configManager.isDebugEnabled()) {
-                    logger.info("Applied stored UUID {} for player {}", storedUuid, username);
+                try {
+                    // Convert string UUID to UUID object
+                    UUID uuid = UUID.fromString(storedUuid);
+                    
+                    // Create a new GameProfile with the stored Mojang UUID
+                    com.velocitypowered.api.util.GameProfile newProfile = 
+                        event.getGameProfile().withId(uuid);
+                    
+                    // Apply the modified profile
+                    event.setGameProfile(newProfile);
+                    
+                    if (configManager.isDebugEnabled()) {
+                        logger.info("Applied stored UUID {} for player {}", storedUuid, username);
+                    }
+                } catch (IllegalArgumentException e) {
+                    logger.error("Failed to parse stored UUID '{}' for player {}: {}", storedUuid, username, e.getMessage());
                 }
             } else if (configManager.isDebugEnabled()) {
                 logger.info("No stored UUID found for player {}, using default", username);
             }
         } catch (Exception e) {
-            logger.error("Failed to apply UUID for player " + username, e);
+            logger.error("Failed to retrieve UUID for player " + username, e);
         }
     }
 }
