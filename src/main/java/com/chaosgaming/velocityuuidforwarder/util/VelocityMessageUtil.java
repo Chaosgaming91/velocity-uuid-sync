@@ -159,7 +159,7 @@ public class VelocityMessageUtil {
             length++;
             
             if (length > 5) {
-                throw new RuntimeException("VarInt too big");
+                throw new RuntimeException("VarInt exceeded maximum length of 5 bytes (got: " + length + " bytes)");
             }
         } while ((currentByte & 0x80) == 0x80);
         

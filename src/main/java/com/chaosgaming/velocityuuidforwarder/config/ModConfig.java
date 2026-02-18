@@ -52,12 +52,6 @@ public class ModConfig {
         configMap.put("secret", secret);
         configMap.put("debug", debug);
         
-        Map<String, Object> withComments = new HashMap<>();
-        withComments.put("_comment1", "Velocity forwarding secret (must match velocity.toml)");
-        withComments.put("secret", secret);
-        withComments.put("_comment2", "Enable debug logging");
-        withComments.put("debug", debug);
-        
         TomlWriter writer = new TomlWriter();
         try {
             writer.write(configMap, configFile);

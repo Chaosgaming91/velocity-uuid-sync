@@ -32,8 +32,9 @@ public abstract class ServerLoginNetworkHandlerMixin {
     private void onVelocityForwardingResponse(LoginQueryResponseC2SPacket packet, CallbackInfo ci) {
         // Check if this is a Velocity forwarding response
         if (packet.response() != null) {
+            ByteBuf data = null;
             try {
-                ByteBuf data = Unpooled.wrappedBuffer(packet.response());
+                data = Unpooled.wrappedBuffer(packet.response());
                 
                 // Read and verify the Velocity forwarding data
                 String secret = VelocityUUIDForwarder.getConfig().getSecret();
@@ -68,8 +69,6 @@ public abstract class ServerLoginNetworkHandlerMixin {
                         username, realUuid);
                     VelocityUUIDForwarder.LOGGER.info("Original address: {}", forwardingData.getAddress());
                 }
-                
-                data.release();
             } catch (SecurityException e) {
                 VelocityUUIDForwarder.LOGGER.error("Rejecting connection from {} - Invalid signature: {}", 
                     getConnectionInfo(), e.getMessage());
@@ -77,6 +76,10 @@ public abstract class ServerLoginNetworkHandlerMixin {
             } catch (Exception e) {
                 VelocityUUIDForwarder.LOGGER.error("Failed to process Velocity forwarding data from {}: {}", 
                     getConnectionInfo(), e.getMessage(), e);
+            } finally {
+                if (data != null) {
+                    data.release();
+                }
             }
         }
     }
