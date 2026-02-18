@@ -10,6 +10,12 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
+# Gradle
+.gradle/
+build/
+.loom-cache/
+run/
+
 # IDE
 .idea/
 *.iml
@@ -31,3 +37,4 @@ buildNumber.properties
 # Testing and runtime generated files
 uuid-mappings.db
 config.properties
+config/velocity-uuid-forwarder.toml
