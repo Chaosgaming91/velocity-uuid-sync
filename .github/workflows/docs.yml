@@ -1,0 +1,44 @@
+name: Documentation Check
+
+on:
+  pull_request:
+    paths:
+      - '**.md'
+      - 'FABRIC_README.md'
+      - 'BUILD_INSTRUCTIONS.md'
+      - 'PROJECT_OVERVIEW.md'
+
+jobs:
+  check-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Check documentation files exist
+        run: |
+          files=(
+            "README.md"
+            "FABRIC_README.md"
+            "BUILD_INSTRUCTIONS.md"
+            "PROJECT_OVERVIEW.md"
+          )
+          
+          for file in "${files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "❌ Missing documentation file: $file"
+              exit 1
+            else
+              echo "✅ Found: $file"
+            fi
+          done
+          
+          echo "✅ All required documentation files present"
+      
+      - name: Check for broken internal links
+        run: |
+          echo "Checking for broken internal links..."
+          # This is a simple check - you could use a tool like markdown-link-check
+          if grep -r "\[.*\]((.*\.md)" *.md; then
+            echo "✅ Internal links found and logged above"
+          fi

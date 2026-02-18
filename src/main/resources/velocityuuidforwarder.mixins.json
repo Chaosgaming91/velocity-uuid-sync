@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.chaosgaming.velocityuuidforwarder.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+  ],
+  "server": [
+    "ServerLoginNetworkHandlerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
