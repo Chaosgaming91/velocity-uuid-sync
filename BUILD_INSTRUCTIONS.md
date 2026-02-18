@@ -35,17 +35,25 @@ Before building, ensure you have the following installed:
 
 ### Network Requirements
 
+⚠️ **IMPORTANT**: The Fabric Maven repository (`maven.fabricmc.net`) must be accessible for the build to succeed.
+
 The build process requires internet access to download:
-- Minecraft server JAR
-- Fabric Loader
-- Fabric API
-- Other dependencies (Netty, SLF4J, TOML4J, etc.)
+- **Fabric Loom Gradle Plugin** (from maven.fabricmc.net - CRITICAL)
+- Minecraft server JAR (from mojang.com)
+- Fabric Loader (from maven.fabricmc.net)
+- Fabric API (from maven.fabricmc.net)
+- Other dependencies like Netty, SLF4J, TOML4J (from Maven Central)
 
 Ensure you have access to:
-- `https://maven.fabricmc.net/` (Fabric Maven repository)
+- `https://maven.fabricmc.net/` **(REQUIRED - Fabric dependencies)**
 - `https://repo.maven.apache.org/maven2/` (Maven Central)
 - `https://launchermeta.mojang.com/` (Mojang metadata)
 - `https://piston-data.mojang.com/` (Mojang artifacts)
+
+**If you cannot access maven.fabricmc.net:**
+- Check your firewall/proxy settings
+- Contact your network administrator to whitelist the domain
+- The build WILL FAIL without access to this repository
 
 ## Building the Mod
 
@@ -193,8 +201,8 @@ The mod has the following dependencies (automatically downloaded by Gradle):
 - **TOML4J**: 0.7.2 (bundled in JAR)
 
 ### Compile-time Only
-- **Fabric Loom**: 1.14-SNAPSHOT (Gradle plugin)
-- **Mojang Mappings**: Official mappings
+- **Fabric Loom**: 1.8 (Gradle plugin via buildscript classpath)
+- **Yarn Mappings**: 1.21.1+build.3
 
 ## Troubleshooting
 
