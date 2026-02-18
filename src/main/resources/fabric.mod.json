@@ -3,17 +3,11 @@
   "id": "velocityuuidforwarder",
   "version": "${version}",
   "name": "Velocity UUID Forwarder",
-  "description": "Handles Velocity's modern player info forwarding protocol to ensure players get their correct Mojang UUIDs",
-  "authors": [
-    "Chaosgaming91"
-  ],
-  "contact": {
-    "homepage": "https://github.com/Chaosgaming91/velocity-uuid-sync",
-    "sources": "https://github.com/Chaosgaming91/velocity-uuid-sync"
-  },
+  "description": "Forwards player UUIDs from Velocity proxy",
+  "authors": ["Chaosgaming91"],
+  "contact": {},
   "license": "MIT",
-  "icon": "assets/velocityuuidforwarder/icon.png",
-  "environment": "server",
+  "environment": "*",
   "entrypoints": {
     "main": [
       "com.chaosgaming.velocityuuidforwarder.VelocityUUIDForwarder"
@@ -24,8 +18,8 @@
   ],
   "depends": {
     "fabricloader": ">=0.16.0",
-    "fabric-api": "*",
     "minecraft": "~1.21.1",
-    "java": ">=21"
+    "java": ">=21",
+    "fabric-api": "*"
   }
 }

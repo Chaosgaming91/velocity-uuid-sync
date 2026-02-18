@@ -1,7 +1,16 @@
-plugins {
-    id 'fabric-loom' version "${loom_version}"
-    id 'maven-publish'
+buildscript {
+    repositories {
+        maven { url = 'https://maven.fabricmc.net/' }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.fabricmc:fabric-loom:1.8'
+    }
 }
+
+apply plugin: 'net.fabricmc.fabric-loom'
+apply plugin: 'maven-publish'
 
 version = project.mod_version
 group = project.maven_group
@@ -11,57 +20,47 @@ base {
 }
 
 repositories {
+    maven { url 'https://maven.fabricmc.net/' }
     mavenCentral()
 }
 
-loom {
-    splitEnvironmentSourceSets()
-    
-    mods {
-        velocityuuidforwarder {
-            sourceSet sourceSets.main
-        }
-    }
-}
+
 
 dependencies {
-    // Minecraft and mappings
+    // Minecraft & Fabric
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings()
-    
-    // Fabric Loader and API
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    
-    // TOML parsing for configuration
-    implementation 'com.moandjiezana.toml:toml4j:0.7.2'
-    include 'com.moandjiezana.toml:toml4j:0.7.2'
+
+    // TOML parser
+    include(implementation("com.moandjiezana.toml:toml4j:0.7.2"))
 }
 
 processResources {
     inputs.property "version", project.version
+    filteringCharset "UTF-8"
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version
     }
 }
 
+def targetJavaVersion = 21
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 21
+    it.options.encoding = "UTF-8"
+    it.options.release = targetJavaVersion
 }
 
 java {
     withSourcesJar()
-
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
-    inputs.property "archivesName", project.base.archivesName
-    
     from("LICENSE") {
-        rename { "${it}_${inputs.properties.archivesName}"}
+        rename { "${it}_${project.archivesBaseName}"}
     }
 }
 
